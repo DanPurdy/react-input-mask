@@ -220,7 +220,7 @@ const InputMask = forwardRef(function InputMask(props, forwardedRef) {
     }
 
     const input = getInputElement();
-    const isFocused = isInputFocused(input);
+    const isFocused = input && isInputFocused(input);
     const previousSelection = lastSelection;
     const currentState = getInputState();
     let newInputState = { ...currentState };
@@ -268,12 +268,14 @@ const InputMask = forwardRef(function InputMask(props, forwardedRef) {
     onChange: isMasked && isEditable ? onChange : props.onChange,
     onMouseDown: isMasked && isEditable ? onMouseDown : props.onMouseDown,
     ref: ref => {
-      inputRef.current = findDOMNode(ref);
+      if (ref) {
+        inputRef.current = findDOMNode(ref);
 
-      if (isFunction(forwardedRef)) {
-        forwardedRef(ref);
-      } else if (forwardedRef !== null && typeof forwardedRef === "object") {
-        forwardedRef.current = ref;
+        if (isFunction(forwardedRef)) {
+          forwardedRef(ref);
+        } else if (forwardedRef !== null && typeof forwardedRef === "object") {
+          forwardedRef.current = ref;
+        }
       }
     },
     value: isMasked && isControlled ? lastValue : props.value
